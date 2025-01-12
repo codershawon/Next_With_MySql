@@ -1,15 +1,15 @@
-import mysql, { Connection } from 'mysql2/promise';
+import { createConnection } from "../../../../lib/db";
+import { NextResponse } from "next/server";
 
-let connection: Connection | null = null;
-
-export const createConnection = async () => {
-    if (!connection) {
-        connection = await mysql.createConnection({
-            host: process.env.DATABASE_HOST,
-            user: process.env.DATABASE_USER,
-            password: process.env.DATABASE_PASSWORD,
-            database: process.env.DATABASE_NAME
-        });
+export const GET = async () => {
+    try {
+      const connection = await createConnection();
+      const [rows] = await connection.execute('SELECT * FROM posts');
+  
+      // Return the posts as JSON response
+      return NextResponse.json(rows);
+    } catch (error) {
+        console.error(error);
+      return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 });
     }
-    return connection;
-};
+  };
