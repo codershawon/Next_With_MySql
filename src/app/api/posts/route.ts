@@ -1,14 +1,15 @@
-import { createConnection } from "../../../../lib/db";
-import { NextResponse } from "next/server";
+import mysql, { Connection } from 'mysql2/promise';
 
-export async function GET() {
-    try{
-        const db = await createConnection()
-        const sql = "SELECT * FROM posts";
-        const [posts]= await db.query(sql);
-        return NextResponse.json(posts);
-    }catch(error){
-        console.log(error);
-        return NextResponse.json({error: "Something went wrong"}, {status: 500});
+let connection: Connection | null = null;
+
+export const createConnection = async () => {
+    if (!connection) {
+        connection = await mysql.createConnection({
+            host: process.env.DATABASE_HOST,
+            user: process.env.DATABASE_USER,
+            password: process.env.DATABASE_PASSWORD,
+            database: process.env.DATABASE_NAME
+        });
     }
-}
+    return connection;
+};
