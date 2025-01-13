@@ -20,7 +20,7 @@ const Page = () => {
       <h1>Next.js and MySQL connection</h1>
       {posts.map((post) => (
         <div key={post.id}>
-          <h2>{post.post}</h2>
+          <h2>{post.name}</h2>
           <p>Created on: {new Date(post.created).toLocaleString()}</p>
           <p>Updated on: {new Date(post.updated).toLocaleString()}</p>
         </div>
