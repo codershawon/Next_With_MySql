@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 interface Post {
   id: number;
-  name: string;
-  created: string;
-  updated: string;
+  title: string;
+  content: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const Page: React.FC = () => {
@@ -14,15 +15,15 @@ const Page: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/posts');
+        const response = await fetch("/api/posts");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data: Post[] = await response.json();
         setPosts(data);
-        console.log(data);
+        console.log("Fetched posts:", data);
       } catch (error) {
-        console.error('Failed to fetch posts:', error);
+        console.error("Failed to fetch posts:", error);
       }
     };
 
@@ -35,9 +36,10 @@ const Page: React.FC = () => {
       {posts.length > 0 ? (
         posts.map((post) => (
           <div key={post.id}>
-            <h2>The name is: {post.name}</h2>
-            <p>Created on: {new Date(post.created).toLocaleString()}</p>
-            <p>Updated on: {new Date(post.updated).toLocaleString()}</p>
+            <h2>Title: {post.title}</h2>
+            <p>Content: {post.content || "No content available"}</p>
+            <p>Created on: {new Date(post.createdAt).toLocaleString()}</p>
+            <p>Updated on: {new Date(post.updatedAt).toLocaleString()}</p>
           </div>
         ))
       ) : (
