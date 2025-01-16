@@ -1,6 +1,5 @@
 import mysql, { Connection } from 'mysql2/promise';
 
-// Explicitly type 'connection' and initialize it to 'null'
 let connection: Connection | null = null;
 
 export const createConnection = async (): Promise<Connection> => {

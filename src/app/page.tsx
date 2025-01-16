@@ -1,29 +1,35 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-interface Post {
+interface Get {
   id: number;
-  title: string;
-  content: string | null;
+  name: string;
+  email: string;
+  password: string;
   createdAt: string;
   updatedAt: string;
 }
 
 const Page: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [gets, setGets] = useState<Get[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
-        const response = await fetch("/api/posts");
+        const response = await fetch("/api/posts"); // This API now returns data for the "Get" model
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data: Post[] = await response.json();
-        setPosts(data);
-        console.log("Fetched posts:", data);
+        const { data }: { data: Get[] } = await response.json();
+        setGets(data);
       } catch (error) {
-        console.error("Failed to fetch posts:", error);
+        console.error("Failed to fetch Gets:", error);
+        setError("Failed to fetch data. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -33,17 +39,22 @@ const Page: React.FC = () => {
   return (
     <div>
       <h1>Next.js and MySQL connection</h1>
-      {posts.length > 0 ? (
-        posts.map((post) => (
-          <div key={post.id}>
-            <h2>Title: {post.title}</h2>
-            <p>Content: {post.content || "No content available"}</p>
-            <p>Created on: {new Date(post.createdAt).toLocaleString()}</p>
-            <p>Updated on: {new Date(post.updatedAt).toLocaleString()}</p>
+      {loading ? (
+        <p>Loading data...</p>
+      ) : error ? (
+        <p style={{ color: "red" }}>{error}</p>
+      ) : gets.length > 0 ? (
+        gets.map((get) => (
+          <div key={get.id}>
+            <h2>Name: {get.name}</h2>
+            <p>Email: {get.email}</p>
+            <p>Password: {get.password}</p>
+            <p>Created on: {new Date(get.createdAt).toLocaleString()}</p>
+            <p>Updated on: {new Date(get.updatedAt).toLocaleString()}</p>
           </div>
         ))
       ) : (
-        <p>No posts available.</p>
+        <p>No data available.</p>
       )}
     </div>
   );
