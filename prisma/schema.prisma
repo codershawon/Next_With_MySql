@@ -3,34 +3,41 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-// Post model (already exists)
-model Post {
+model get {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique(map: "Get_email_key")
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model post {
   id        Int      @id @default(autoincrement())
   title     String
   content   String?
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime
 }
 
-// New User model
-model User {
+model user {
   id        Int      @id @default(autoincrement())
   name      String
-  email     String   @unique
+  email     String   @unique(map: "User_email_key")
   password  String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime
 }
-// New Get model
-model Get {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+model features{
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
